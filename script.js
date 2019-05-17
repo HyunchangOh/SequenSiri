@@ -1,15 +1,21 @@
 
 //this part will execute the functions only after document has fully loaded
 $(document).ready(function(){
-    Enterpressed();
-    analyse();
-    calculateTm();
-    seqlength();
-    checkvalid();
+        EnterPressed();
+        analyse();
+        calculateTm();
+        seqlength();
+        checkValid();
+        PrintLongestPalindrome();
+        printFirstProtein();
+        printSecondProtein();
+        printThirdProtein();
+    
+
 });
 
 //If enter is pressed in the input box, the 'analyse' button will be pressed
-function Enterpressed(){
+function EnterPressed(){
     var inputbox = document.getElementById("inputseq");
     inputbox.addEventListener("keyup", function(event) {
     // Number 13 is the "Enter" key on the keyboard
@@ -54,7 +60,13 @@ function calculateTm(){
         document.getElementById("answer").innerHTML = "Tm is " + tm + " oC";
     })
 }
-
+//process input
+function processInput(){
+    var input = document.getElementById("inputseq").value;
+    input = input.replace(/\s/g,''); 
+    input = input.toUpperCase();
+    window.input=input;
+}
 
 // when length? button is pressed, calculate and show the length of the sequence
 function seqlength(){
@@ -66,7 +78,7 @@ function seqlength(){
 
 // check valid
 
-function checkvalid(){
+function checkValid(){
     $("#checkvalid").click(function(){
         var input = document.getElementById("inputseq").value;
         var Gnum = (input.toLowerCase().match(/g/g)||[]).length;
@@ -83,3 +95,79 @@ function checkvalid(){
         }
     })
 }
+
+
+//check if palindrome
+
+function is_Palindrome(str) {
+    var rev = str.split("").reverse().join("");
+    return str == rev;
+}
+
+//returns longest palindromic substring in a string input str1.
+//This function assumes there is one single longest palindromic substring.
+function longest_palindrome(str){
+    longest = '';
+
+    for(var i=0; i < str.length; i++){
+    var substring = str.substr(i, str.length);
+
+        for(var j=substring.length; j>=0; j--){
+            var substring_of_substring= substring.substr(0, j);
+            if (is_Palindrome(substring_of_substring)){
+                if (substring_of_substring.length > longest.length){
+                    longest = substring_of_substring;
+                }
+            }
+        }
+    }
+return longest;
+}
+
+function PrintLongestPalindrome(){
+    $("#long").click(function(){
+        var input = window.input;
+        input = input.replace(/\s/g,''); 
+        document.getElementById("answer").innerHTML = longest_palindrome(input);
+    })
+}
+
+function FirstFrameProtein(str){
+ 
+    let res = "";
+    str.match(/.{1,3}/g).forEach(s => {
+        var key = Object.keys(codon).filter(x => codon[x].filter(y => y === s).length > 0)[0];
+        res += key != undefined ? key : '';
+    })
+
+    document.getElementById("answer").innerHTML = res;
+}
+
+function printFirstProtein(){  
+    $("#toProtein").click(function(){
+        processInput(); 
+        FirstFrameProtein(input);
+    })
+}
+
+function printSecondProtein(){  
+    $("#toProtein2").click(function(){
+        processInput();
+        var input2=window.input.substr(1,input.length);
+        FirstFrameProtein(input2);
+    })
+}
+
+function printThirdProtein(){  
+    $("#toProtein3").click(function(){
+        processInput();
+        var input2=window.input.substr(2,input.length);
+        FirstFrameProtein(input2);
+    })
+}
+
+//check protein validity by checking if there are both start codon and stop codon
+
+//get complementary strand
+
+//
